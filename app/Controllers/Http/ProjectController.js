@@ -1,6 +1,6 @@
-'use strict'
+"use strict";
 
-const Project = use('App/Models/Project')
+const Project = use("App/Models/Project");
 
 /**
  * Resourceful controller for interacting with projects
@@ -15,10 +15,11 @@ class ProjectController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
-    const project = await Project.query().with('user').fetch()
+  async index({ request }) {
+    const { page } = request.get();
+    const project = await Project.query().with("user").paginate(page);
 
-    return project
+    return project;
   }
 
   /**
@@ -29,12 +30,12 @@ class ProjectController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ request, response, auth }) {
-    const data = request.only(['title', 'description'])
+  async store({ request, response, auth }) {
+    const data = request.only(["title", "description"]);
 
-    const project = await Project.create({ ...data, user_id: auth.user.id })
+    const project = await Project.create({ ...data, user_id: auth.user.id });
 
-    return project
+    return project;
   }
 
   /**
@@ -46,13 +47,13 @@ class ProjectController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show ({ params }) {
-    const project = await Project.findOrFail(params.id)
+  async show({ params }) {
+    const project = await Project.findOrFail(params.id);
 
-    await project.load('user')
-    await project.load('tasks')
+    await project.load("user");
+    await project.load("tasks");
 
-    return project
+    return project;
   }
 
   /**
@@ -63,16 +64,16 @@ class ProjectController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request }) {
-    const project = await Project.findOrFail(params.id)
+  async update({ params, request }) {
+    const project = await Project.findOrFail(params.id);
 
-    const data = request.only(['title', 'description'])
+    const data = request.only(["title", "description"]);
 
-    project.merge(data)
+    project.merge(data);
 
-    await project.save()
+    await project.save();
 
-    return project
+    return project;
   }
 
   /**
@@ -83,11 +84,11 @@ class ProjectController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params }) {
-    const project = await Project.findOrFail(params.id)
+  async destroy({ params }) {
+    const project = await Project.findOrFail(params.id);
 
-    project.delete()
+    project.delete();
   }
 }
 
-module.exports = ProjectController
+module.exports = ProjectController;
