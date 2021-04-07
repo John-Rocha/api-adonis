@@ -3,7 +3,7 @@
 const Route = use('Route')
 
 /**Rotas de User */
-Route.post('users', 'UserController.store')
+Route.post('users', 'UserController.store').validator(['User'])
 
 /**Rotas de Session */
 Route.post('sessions', 'SessionController.store')
