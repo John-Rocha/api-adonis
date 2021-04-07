@@ -4,7 +4,13 @@ const File = use("App/Models/File");
 const Helpers = use("Helpers");
 
 class FileController {
-  async store({ request, response }) {
+  async show ({ params, response }) {
+    const file = await File.findOrFail(params.id)
+
+    return response.download(Helpers.tmpPath(`uploads/${file.file}`))
+  }
+
+  async store ({ request, response }) {
     try {
       if (!request.file("file")) return;
 
@@ -12,10 +18,9 @@ class FileController {
       const fileName = `${Date.now()}.${upload.subtype}`;
 
       await upload.move(
-        Helpers.tmpPath("uploads", {
+        Helpers.tmpPath("uploads"), {
           name: fileName,
         })
-      );
 
       if (!upload.moved()) {
         throw upload.error();
