@@ -20,6 +20,9 @@ Route.put("passwords", "ForgotPasswordController.update").validator([
 Route.get("/files/:id", "FileController.show");
 
 Route.group(() => {
+  /**Update Users */
+  Route.put("users/:id", "UserController.update");
+
   /**Rotas de File */
   Route.post("/files", "FileController.store");
 
